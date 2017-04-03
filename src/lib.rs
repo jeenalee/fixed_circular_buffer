@@ -22,6 +22,20 @@ impl<T> CircularBuffer<T>{
 	#[inline]
 	pub fn len(&self) -> usize{self.list.len()}
 
+    ///Enqueues (push at end) the given element at the beginning of the buffer
+    ///Dequeues (pop at beginning) the first element and returns it
+    ///This keeps the the buffer length
+    pub fn rev_queue(&mut self,mut elem: T) -> T{
+    let len = self.len();
+    mem::swap(
+        unsafe {
+            self.list.get_unchecked_mut(self.first)
+        }
+        ,&mut elem);
+    self.first = (self.first + 1) % len;
+    elem
+    }
+
 	///Enqueues (push at beginning) the given element at the beginning of the buffer
 	///Dequeues (pop at end) the last element and returns it
 	///This keeps the the buffer length
